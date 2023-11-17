@@ -31,7 +31,7 @@ left_model = tf.keras.models.load_model('left_model_2')
 right_model = tf.keras.models.load_model('right_model_2')
 
 foto ="a.png"
-tf.keras.utils.plot_model(left_model, to_file=foto, show_shapes=True)
+#tf.keras.utils.plot_model(left_model, to_file=foto, show_shapes=True)
 def execute_flow(gamab_max, gamab_min, titab_max, titab_min, TIME_LIMIT, NUM_Particules):
     # Base Path
 
@@ -802,7 +802,7 @@ for gamab_max in [60]:
         for titab_max in [30]:
             for titab_min in [10]:
                 for max_time in [10]:
-                    for n_part in [1]:
+                    for n_part in [1000]:
                         print("Executing model")
                         start = time.time()
                         execution_details = execute_flow(
