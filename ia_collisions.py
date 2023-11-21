@@ -29,9 +29,10 @@ setup_start = time.time()
 left_model = tf.keras.models.load_model('left_model_2')
 right_model = tf.keras.models.load_model('right_model_2')
 
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 #foto ="a.png"
 #tf.keras.utils.plot_model(left_model, to_file=foto, show_shapes=True)
-def execute_flow(gamab_max, gamab_min, titab_max, titab_min, TIME_LIMIT, NUM_Particules):
+def execute_flow(gamab_max, gamab_min, titab_max, titab_min, TIME_LIMIT, NUM_Particules, ignore_time):
     # Base Path
     base_left_path_data = {
         0.0: {'y': 0.020882013129210387, 'z': 0.02378285024643772}, 0.01: {'y': 0.05899288996039536, 'z': 0.07338496215822628},
@@ -497,25 +498,24 @@ def execute_flow(gamab_max, gamab_min, titab_max, titab_min, TIME_LIMIT, NUM_Par
             particule["next_points"] = []
             return new_position
 
-        def start(self, ignore_time = 0):
+        def start(self):
             self.generate_base_info()
             total_time = int(self.time/self.DT)
             
             ignore_start = time.time()
             for i in range(0, int(ignore_time/self.DT)):
                 self.next_step(collisions=False)
-
             ignore_end = time.time()
             self.time_ignored = ignore_end - ignore_start
 
             for i in range(0, total_time):
-                if i % 100 == 0:
-                   print("step", float(i/self.time))
+                #if i % 100 == 0:
+                   #print("step", float(i/self.time))
                 self.next_step()
             return self.simulations, self.time_ignored, self.time_collisiondetect, self.time_collisionupdate, self.collisions
 
         def generate_base_info(self):
-            (xt, yt, zt, ut, vt, wt) = np.loadtxt("input10000.in", dtype="float", unpack=True, ndmin=2)
+            (xt, yt, zt, ut, vt, wt) = np.loadtxt("input1000.in", dtype="float", unpack=True, ndmin=2)
             xtg, ytg, ztg, utg, vtg, wtg = np.asarray(xt), np.asarray(yt), np.asarray(zt), np.asarray(ut), np.asarray(vt), np.asarray(wt)
 
             for i in range(0, self.num_particles):
@@ -855,8 +855,7 @@ for gamab_max in [60]:
                     for n_part in [1000]:
                         print("Executing model")
                         start = time.time()
-                        execution_details = execute_flow(
-                            gamab_max, gamab_min, titab_max, titab_min, max_time, n_part)
+                        execution_details = execute_flow(gamab_max, gamab_min, titab_max, titab_min, max_time, n_part, ignore_time)
                         end = time.time()
                         print(n_part, end-start)
                         #print(max_time,
